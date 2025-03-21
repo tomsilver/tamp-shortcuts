@@ -23,6 +23,10 @@ class RandomActionsApproach(
         super().__init__(simulator, seed)
         self._simulator.action_space.seed(seed)
 
+    def train(self) -> None:
+        # No training needed for random action selection
+        pass
+
     def reset(self, init_obs: ObsType) -> None:
         # No internal state to reset for random action selection
         pass

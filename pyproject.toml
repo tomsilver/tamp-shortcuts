@@ -21,6 +21,7 @@ dependencies = [
     "pandas-stubs",
     "hydra-core",
     "omegaconf",
+    "stable_baselines3>=2.5.0",
 ]
 
 [project.optional-dependencies]

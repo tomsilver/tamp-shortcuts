@@ -20,6 +20,11 @@ class BaseApproach(Generic[ObsType, ActType, SceneSpec]):
         self._rng = np.random.default_rng(seed)
 
     @abc.abstractmethod
+    def train(self) -> None:
+        """Train the approach."""
+        raise NotImplementedError
+
+    @abc.abstractmethod
     def reset(self, init_obs: ObsType) -> None:
         """Reset the approach with the initial observation."""
 
