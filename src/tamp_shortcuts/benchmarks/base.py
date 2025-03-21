@@ -1,20 +1,17 @@
 """Base class for environments."""
 
 import abc
-from dataclasses import dataclass
-from typing import Any, Generic
+from typing import Any, Generic, TypeVar
 
 import numpy as np
-from gymnasium.core import ActType, Env, ObsType, RenderFrame
+from gymnasium.core import ActType, Env, ObsType
 from gymnasium.spaces import Space
+from numpy.typing import NDArray
+
+SceneSpec = TypeVar("SceneSpec")
 
 
-@dataclass(frozen=True)
-class SceneSpec:
-    """A scene specification."""
-
-
-class Simulator(Generic[ObsType, ActType]):
+class Simulator(Generic[ObsType, ActType, SceneSpec]):
     """A deterministic environment simulator."""
 
     def __init__(self, scene_spec: SceneSpec) -> None:
@@ -47,14 +44,14 @@ class Simulator(Generic[ObsType, ActType]):
         """Check if the environment is done."""
 
     @abc.abstractmethod
-    def render_state(self, state: ObsType) -> RenderFrame:  # type: ignore
+    def render_state(self, state: ObsType) -> NDArray[np.uint8]:
         """Render the environment given a state."""
 
 
-class Environment(Env[ObsType, ActType], Generic[ObsType, ActType]):
+class Environment(Env[ObsType, ActType], Generic[ObsType, ActType, SceneSpec]):
     """A deterministic environment."""
 
-    def __init__(self, simulator: Simulator[ObsType, ActType]) -> None:
+    def __init__(self, simulator: Simulator[ObsType, ActType, SceneSpec]) -> None:
         self._simulator = simulator
         self._current_state: ObsType | None = None
 
@@ -87,7 +84,7 @@ class Environment(Env[ObsType, ActType], Generic[ObsType, ActType]):
         self._current_state = self._simulator.sample_initial_state(self._np_random)
         return self._current_state, {}
 
-    def render(self) -> RenderFrame:  # type: ignore
+    def render(self) -> NDArray[np.uint8]:  # type: ignore
         """Render the environment."""
         assert self._current_state is not None
         return self._simulator.render_state(self._current_state)
