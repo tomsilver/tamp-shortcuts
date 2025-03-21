@@ -36,11 +36,11 @@ class NumberEnvSimulator(Simulator[NumberState, NumberAction, SceneSpecNumber]):
     """Number environment in 1D."""
 
     @property
-    def observation_space(self) -> gym.Space:
+    def _observation_space(self) -> gym.Space:
         return MultiDiscrete([self.scene_spec.max_number + 1, 2])
 
     @property
-    def action_space(self) -> gym.Space:
+    def _action_space(self) -> gym.Space:
         return MultiDiscrete([2, 2])
 
     def sample_initial_state(self, rng: np.random.Generator) -> NumberState:

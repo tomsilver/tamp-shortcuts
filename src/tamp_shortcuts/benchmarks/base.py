@@ -16,15 +16,17 @@ class Simulator(Generic[ObsType, ActType, SceneSpec]):
 
     def __init__(self, scene_spec: SceneSpec) -> None:
         self.scene_spec = scene_spec
+        self.observation_space = self._observation_space
+        self.action_space = self._action_space
 
     @property
     @abc.abstractmethod
-    def observation_space(self) -> Space[ObsType]:
+    def _observation_space(self) -> Space[ObsType]:
         """Return the observation space of the environment."""
 
     @property
     @abc.abstractmethod
-    def action_space(self) -> Space[ActType]:
+    def _action_space(self) -> Space[ActType]:
         """Return the action space of the environment."""
 
     @abc.abstractmethod
