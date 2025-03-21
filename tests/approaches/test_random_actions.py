@@ -5,7 +5,7 @@ from unittest.mock import patch
 import numpy as np
 
 from tamp_shortcuts.approaches.random_actions import RandomActionsApproach
-from tamp_shortcuts.benchmarks.base import Environment
+from tamp_shortcuts.benchmarks.base import SimulatorEnvironment
 from tamp_shortcuts.benchmarks.number_env import (
     NumberAction,
     NumberEnvSimulator,
@@ -36,7 +36,7 @@ def test_random_actions_approach():
         assert action == NumberAction(move=True, set_light=False)
 
     # Create an environment and take a number of actions
-    env = Environment(NumberEnvSimulator(scene_spec))
+    env = SimulatorEnvironment(NumberEnvSimulator(scene_spec))
     obs = env.reset(seed=123)
     approach.reset(obs)
     for _ in range(10):

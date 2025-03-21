@@ -10,14 +10,12 @@ from stable_baselines3 import PPO
 from stable_baselines3.common.callbacks import BaseCallback
 
 from tamp_shortcuts.approaches.base import BaseApproach
-from tamp_shortcuts.benchmarks.base import Environment, SceneSpec, Simulator
+from tamp_shortcuts.benchmarks.base import SceneSpec, Simulator, SimulatorEnvironment
 
 
 @dataclass
 class RLConfig:
     """Configuration for RL policy."""
-
-    # TODO move into hydra
 
     learning_rate: float = 1e-4
     batch_size: int = 32
@@ -44,7 +42,8 @@ class RLApproach(
         self._config = config
 
         # Create an environment from the simulator
-        self._env = Environment(simulator)
+        self._env = SimulatorEnvironment(simulator)
+        self._env.reset(seed=seed)
 
         # Create the PPO model
         self._ppo_model = PPO(
@@ -70,9 +69,9 @@ class RLApproach(
         pass
 
     def step(self, obs: ObsType) -> ActType:
-        assert isinstance(obs, np.ndarray)
+        obs_arr = np.array(obs, dtype=np.float32)
         with torch.no_grad():
-            action, _ = self._ppo_model.predict(obs, deterministic=True)
+            action, _ = self._ppo_model.predict(obs_arr, deterministic=True)
         return cast(ActType, action)
 
 
@@ -105,7 +104,7 @@ class TrainingProgressCallback(BaseCallback):
             self.current_length = 0
             self.current_reward = 0.0
 
-            # Print prorgess regularly
+            # Print progress regularly
             n_episodes = len(self.success_history)
             if n_episodes % self.check_freq == 0:
                 recent_successes = self.success_history[-self.check_freq :]

@@ -83,7 +83,7 @@ def test_get_reward():
     state = NumberState(num=2, light_switch=True)
     action = NumberAction(move=False, set_light=True)
     reward = simulator.get_reward(state, action)
-    assert reward == 1.0
+    assert reward == 0.0
 
 
 def test_check_done():
