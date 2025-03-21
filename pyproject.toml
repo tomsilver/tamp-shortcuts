@@ -9,8 +9,18 @@ description = "A basic starter for Python packages."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-   "matplotlib",
-   "numpy",
+    "matplotlib",
+    "numpy",
+    "gymnasium",
+    "tomsutils@git+https://github.com/tomsilver/toms-utils.git",
+    "relational-structs@git+https://github.com/tomsilver/relational-structs.git",
+    "tomsgeoms2d@git+https://github.com/tomsilver/toms-geoms-2d",
+    "gymnasium>=1.0.0",
+    "moviepy",
+    "pandas",
+    "pandas-stubs",
+    "hydra-core",
+    "omegaconf",
 ]
 
 [project.optional-dependencies]
