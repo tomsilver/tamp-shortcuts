@@ -50,32 +50,27 @@ class Simulator(Generic[ObsType, ActType, SceneSpec]):
         """Render the environment given a state."""
 
 
-class Environment(Env[ObsType, ActType], Generic[ObsType, ActType, SceneSpec]):
-    """A deterministic environment."""
+class SimulatorEnvironment(Env[ObsType, ActType], Generic[ObsType, ActType, SceneSpec]):
+    """A deterministic environment defined by a simulator."""
 
     def __init__(self, simulator: Simulator[ObsType, ActType, SceneSpec]) -> None:
         self._simulator = simulator
         self._current_state: ObsType | None = None
-
-    @property
-    def _observation_space(self) -> Space[ObsType]:
-        """Return the observation space of the environment."""
-        return self._simulator.observation_space
-
-    @property
-    def _action_space(self) -> Space[ActType]:
-        """Return the action space of the environment."""
-        return self._simulator.action_space
+        self.observation_space = self._simulator.observation_space
+        self.action_space = self._simulator.action_space
+        super().__init__()
 
     def step(
         self, action: ActType
     ) -> tuple[ObsType, float, bool, bool, dict[str, Any]]:
         """Take a step in the environment."""
         assert self._current_state is not None
-        next_state = self._simulator.get_next_state(self._current_state, action)
+        self._current_state = self._simulator.get_next_state(
+            self._current_state, action
+        )
         reward = self._simulator.get_reward(self._current_state, action)
-        done = self._simulator.check_done(next_state)
-        return next_state, reward, done, False, {}
+        done = self._simulator.check_done(self._current_state)
+        return self._current_state, reward, done, False, {}
 
     def reset(
         self, *, seed: int | None = None, options: dict[str, Any] | None = None

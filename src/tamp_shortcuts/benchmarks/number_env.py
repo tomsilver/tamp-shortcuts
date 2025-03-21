@@ -48,14 +48,13 @@ class NumberEnvSimulator(Simulator[NumberState, NumberAction, SceneSpecNumber]):
 
     def get_next_state(self, state: NumberState, action: NumberAction) -> NumberState:
         move_action, light_action = action
-
         new_light = bool(light_action)
         new_num = min(state.num + move_action, self.scene_spec.max_number)
         return NumberState(num=new_num, light_switch=new_light)
 
     def get_reward(self, state: NumberState, action: NumberAction) -> float:
         if self.check_done(state):
-            return 1.0
+            return 0.0
         return -0.01
 
     def check_done(self, state: NumberState) -> bool:
